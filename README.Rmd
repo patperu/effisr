@@ -28,7 +28,8 @@ dplyr::glimpse(res$docs)
 plot(res$docs$geom)
 
 x <- tibble::as_tibble(res$docs) %>%
-     sf::st_as_sf(coords = c("lon", "lat"))
+     sf::st_as_sf(coords = c("lon", "lat")) %>% 
+     sf::st_set_crs( 4326)
 ```
 
 ```{r}
@@ -39,7 +40,7 @@ x %>%
       ggplot() +
       geom_sf(aes(fill = area_ha)) +
       ggtitle("Fire") +
-      theme(legend.position="bottom")
+      theme(legend.position="bottom") 
 
 ```
 
