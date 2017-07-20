@@ -1,0 +1,17 @@
+Package: effisr
+Title: 'EFFIS' Data from R
+Description: Client for the 'EFFIS' 'API' at <http://gwis.jrc.ec.europa.eu/rest/?format=api>,
+Version: 0.1.0
+License: MIT + file LICENSE
+Encoding: UTF-8
+Authors@R: c(
+    person("Patrick", "Hausmann", role = c("aut","cre"), email = "patrick.hausmann@covimo.de"),
+    person("Andrea", "Zedda", role = c("aut", "ctb")))
+URL: https://github.com/patperu/effisR
+BugReports: https://github.com/patperu/effisR/issues
+LazyData: true
+Imports:
+        httr,
+        jsonlite,
+        sf
+RoxygenNote: 6.0.1

@@ -1,0 +1,46 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+editor_options:
+  chunk_output_type: console
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# effisR
+
+The goal of eff is to ...
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+
+library(effisr)
+library(sf)
+
+res <- eff_search(country = "IT", limit = 250)
+dplyr::glimpse(res$docs)
+
+plot(res$docs$geom)
+
+x <- tibble::as_tibble(res$docs) %>%
+     sf::st_as_sf(coords = c("lon", "lat"))
+```
+
+```{r}
+
+library(ggplot2)
+
+x %>%
+      ggplot() +
+      geom_sf(aes(fill = area_ha)) +
+      ggtitle("Fire") +
+      theme(legend.position="bottom")
+
+```
+
+Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+
