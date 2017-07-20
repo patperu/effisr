@@ -11,9 +11,7 @@ editor_options:
 [![Travis-CI Build Status](https://travis-ci.org/patperu/effisr.svg?branch=master)](https://travis-ci.org/patperu/effisr)
 
 
-# effisR
-
-The goal of eff is to ...
+# effisr
 
 ## Example
 

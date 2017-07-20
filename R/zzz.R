@@ -16,7 +16,7 @@ parse_facet  <- function(x) {
   z <- x$results
   coords <- data.frame(t(sapply(z$centroid$coordinates, "[")), stringsAsFactors = FALSE)
   colnames(coords) <- c("lon", "lat")
-  z <- cbind(z, coords)
+  z <- readr::type_convert(cbind(z, coords), col_types = readr::cols())
 
   k <- lapply(x$results$shape$coordinates,
               function(m) {
