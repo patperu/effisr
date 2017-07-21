@@ -24,7 +24,7 @@ parse_facet  <- function(x) {
               sf::st_polygon(list(v))
               })
 
-  z$geom <- sf::st_sfc(k)
+  z$geom_shape <- sf::st_sfc(k)
 
   geo <- list(bbox = z$bbox, shape = z$shape)
 
