@@ -8,6 +8,7 @@ editor_options:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](http://www.repostatus.org/badges/latest/concept.svg)](http://www.repostatus.org/#concept)
 [![Travis-CI Build Status](https://travis-ci.org/patperu/effisr.svg?branch=master)](https://travis-ci.org/patperu/effisr)
 
 
@@ -22,7 +23,7 @@ This is a basic example which shows you how to solve a common problem:
 library(effisr)
 library(sf)
 
-res <- eff_search(country = "IT", limit = 250)
+res <- ba_current(country = "IT", limit = 250)
 dplyr::glimpse(res$docs)
 
 plot(res$docs$geom_shape)

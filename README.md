@@ -1,5 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/patperu/effisr.svg?branch=master)](https://travis-ci.org/patperu/effisr)
+[![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](http://www.repostatus.org/badges/latest/concept.svg)](http://www.repostatus.org/#concept) [![Travis-CI Build Status](https://travis-ci.org/patperu/effisr.svg?branch=master)](https://travis-ci.org/patperu/effisr)
 
 effisr
 ======
@@ -17,13 +17,13 @@ library(sf)
     ## Linking to GEOS 3.6.1, GDAL 2.2.0, proj.4 4.9.3
 
 ``` r
-res <- eff_search(country = "IT", limit = 250)
+res <- ba_current(country = "IT", limit = 250)
 dplyr::glimpse(res$docs)
 ```
 
     ## Observations: 250
     ## Variables: 26
-    ## $ objectid         <int> 314756, 314885, 314508, 314860, 314666, 31485...
+    ## $ objectid         <int> 315903, 316024, 315677, 315995, 316079, 31599...
     ## $ id               <int> 168580, 168534, 163740, 167251, 168573, 16406...
     ## $ countryful       <chr> "Italy", "Italy", "Italy", "Italy", "Italy", ...
     ## $ province         <chr> "Latina", "Cosenza", "Olbia-Tempio", "Cosenza...

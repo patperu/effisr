@@ -1,4 +1,4 @@
-#' R client for EFFIS
+#' R Client for the European Forest Fire Information System (EFFIS) API
 #'
 #' @name effisr-package
 #' @aliases effisr

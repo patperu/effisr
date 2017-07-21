@@ -1,8 +1,9 @@
-cabase <- function() "http://effis.jrc.ec.europa.eu/rest/2/burntareas/current/?"
+cabase <- function() "http://effis.jrc.ec.europa.eu/rest/2/"
 
 makeurl <- function(url, x) if(is.null(x)) paste0(url, "/search") else paste0(url, "/", x)
 
 ca_GET <- function(url, args, ...) {
+
   res <- httr::GET(url, query=args, ...)
   httr::stop_for_status(res)
   text <- httr::content(res, as = "text", encoding = "UTF-8")
