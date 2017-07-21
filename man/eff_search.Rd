@@ -2,33 +2,28 @@
 % Please edit documentation in R/effisr-search.R
 \name{eff_search}
 \alias{eff_search}
-\title{Search EFFIS}
+\title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
-eff_search(country = NULL, countryful = NULL, province = NULL,
-  commune = NULL, limit = NULL, critech = NULL, firedate = NULL,
-  area_ha = NULL, page = NULL, ...)
+eff_search(country = NULL, province = NULL, limit = NULL,
+  firedate = NULL, area_ha = NULL, ba_class = NULL, page = NULL, ...)
 }
 \arguments{
-\item{country}{(character) Country name, a 2 letter code}
-
-\item{countryful}{(character) Country name, long name}
+\item{country}{(character) ISO country code}
 
 \item{province}{(character) Province name}
 
-\item{commune}{(character) Commune}
-
 \item{limit}{(integer) record limit}
 
-\item{critech}{(character) one of 'YES'}
-
-\item{firedate}{(character) YYYy-MM-DD}
+\item{firedate}{(character) YYYY-MM-DD}
 
 \item{area_ha}{(integer) size}
+
+\item{ba_class}{(character) one of 'ALL', '30DAYS' or '07DAYS'}
 
 \item{page}{(integer) Page number}
 
 \item{...}{Curl options passed on to \code{\link[httr]{GET}}}
 }
 \description{
-Search EFFIS
+Search the European Forest Fire Information System 'EFFIS'
 }
