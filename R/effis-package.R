@@ -1,4 +1,4 @@
-#' R client for Effis
+#' R client for EFFIS
 #'
 #' @name effisr-package
 #' @aliases effisr

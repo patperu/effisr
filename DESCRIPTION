@@ -1,7 +1,7 @@
 Package: effisr
 Title: 'EFFIS' Data from R
-Description: Client for the 'EFFIS' 'API' at <http://gwis.jrc.ec.europa.eu/rest/?format=api>,
-Version: 0.1.0.9000
+Description: Client for the European Forest Fire Information System (EFFIS) API
+Version: 0.1.0.9050
 License: MIT + file LICENSE
 Encoding: UTF-8
 Authors@R: c(
