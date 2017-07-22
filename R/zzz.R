@@ -36,3 +36,16 @@ parse_facet  <- function(x) {
   list(result=z, geo=geo)
 
 }
+
+get_coords <- function(x) {
+
+    x <- x$centroid
+
+    # set 'null' to NA
+    ix <- which(is.na(x$type))
+    x$coordinates[ix] <- NA
+    coords <- data.frame(do.call("rbind", x$coordinates),
+                         stringsAsFactors = FALSE)
+    colnames(coords) <- c("lon", "lat")
+    coords
+}

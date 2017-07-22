@@ -4,7 +4,7 @@
 \name{effisr-package}
 \alias{effisr-package}
 \alias{effisr}
-\title{R client for Effis}
+\title{R client for EFFIS}
 \description{
 R Client for the European Forest Fire Information System (EFFIS) API
 }
@@ -22,6 +22,7 @@ This package gives you access to data from EFFIS System
 \itemize{
  \item \code{\link{ef_current}}
  \item \code{\link{ef_trend}} .
+ \item \code{\link{ef_fires}} .
 }
 }
 

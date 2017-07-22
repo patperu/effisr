@@ -12,13 +12,14 @@
 #' \itemize{
 #'  \item \code{\link{ef_current}}
 #'  \item \code{\link{ef_trend}} .
+#'  \item \code{\link{ef_fires}} .
 #' }
 #'
 #'
 #' @name effisr-package
 #' @aliases effisr
 #' @docType package
-#' @title R client for Effis
+#' @title R client for EFFIS
 #' @author Patrick Hausmann \email{patrick.hausmann@@covimo.de}
 #' @keywords package
 #' @importFrom readr type_convert cols

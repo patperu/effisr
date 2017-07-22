@@ -63,4 +63,13 @@ gg
 
 ```
 
+# Fires
+
+```{r}
+
+x <- ef_fires(country = "IT", limit = 1000)
+dplyr::glimpse(x)
+
+```
+
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
