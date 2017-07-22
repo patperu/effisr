@@ -17,7 +17,7 @@ library(sf)
     ## Linking to GEOS 3.6.1, GDAL 2.2.0, proj.4 4.9.3
 
 ``` r
-res <- ba_current(country = "IT", limit = 250)
+res <- ef_current(country = "IT", limit = 250)
 dplyr::glimpse(res$docs)
 ```
 
@@ -73,5 +73,37 @@ x %>%
 ```
 
 ![](README_files/figure-markdown_github/unnamed-chunk-1-1.png)
+
+``` r
+x <- ef_trend(country = "IT", decimate = 7)
+
+dplyr::glimpse(x)
+```
+
+    ## Observations: 53
+    ## Variables: 8
+    ## $ country     <chr> "IT", "IT", "IT", "IT", "IT", "IT", "IT", "IT", "I...
+    ## $ day         <date> 1976-01-01, 1976-01-08, 1976-01-15, 1976-01-22, 1...
+    ## $ year_first  <int> 2008, 2008, 2008, 2008, 2008, 2008, 2008, 2008, 20...
+    ## $ year_last   <int> 2016, 2016, 2016, 2016, 2016, 2016, 2016, 2016, 20...
+    ## $ historic_nf <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+    ## $ historic_ba <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 21, 56, 56, ...
+    ## $ current_nf  <dbl> 0, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 7, 9,...
+    ## $ current_ba  <dbl> 0, 84, 84, 2487, 2487, 2487, 2487, 2487, 2487, 248...
+
+``` r
+gg <- ggplot(x, aes(day, current_ba, group = country, color = country)) + geom_line()
+gg <- gg + scale_x_date(expand=c(0,1), limits=range(x$day))
+gg <- gg + labs(x=NULL,
+                title="Burnt Areas 2017",
+                subtitle="",
+                caption="Source: EFFIS")
+gg <- gg + theme_bw()
+gg
+```
+
+    ## Warning: Removed 24 rows containing missing values (geom_path).
+
+![](README_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.

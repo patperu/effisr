@@ -23,7 +23,7 @@ This is a basic example which shows you how to solve a common problem:
 library(effisr)
 library(sf)
 
-res <- ba_current(country = "IT", limit = 250)
+res <- ef_current(country = "IT", limit = 250)
 dplyr::glimpse(res$docs)
 
 plot(res$docs$geom_shape)
@@ -43,6 +43,23 @@ x %>%
       geom_sf(aes(size = area_ha, geometry = geom_shape)) +
       ggtitle("Fire") +
       theme(legend.position="bottom") 
+
+```
+
+```{r}
+
+x <- ef_trend(country = "IT", decimate = 7)
+
+dplyr::glimpse(x)
+
+gg <- ggplot(x, aes(day, current_ba, group = country, color = country)) + geom_line()
+gg <- gg + scale_x_date(expand=c(0,1), limits=range(x$day))
+gg <- gg + labs(x=NULL,
+                title="Burnt Areas 2017",
+                subtitle="",
+                caption="Source: EFFIS")
+gg <- gg + theme_bw()
+gg
 
 ```
 
