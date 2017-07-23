@@ -17,11 +17,11 @@ library(sf)
     ## Linking to GEOS 3.6.1, GDAL 2.2.0, proj.4 4.9.3
 
 ``` r
-res <- ef_current(country = "IT", limit = 250)
+res <- ef_current(country = "IT", limit = 500)
 dplyr::glimpse(res$docs)
 ```
 
-    ## Observations: 250
+    ## Observations: 340
     ## Variables: 26
     ## $ objectid         <int> 315903, 316024, 315677, 315995, 316079, 31599...
     ## $ id               <int> 168580, 168534, 163740, 167251, 168573, 16406...
@@ -48,10 +48,10 @@ dplyr::glimpse(res$docs)
     ## $ country          <chr> "IT", "IT", "IT", "IT", "IT", "IT", "IT", "IT...
     ## $ lon              <dbl> 13.297916, 15.845284, 9.384212, 15.832824, 15...
     ## $ lat              <dbl> 41.34202, 39.73190, 40.69381, 39.85083, 40.31...
-    ## $ geom_shape       <simple_feature> POLYGON((13.304083358 41.34..., PO...
+    ## $ geo_shape        <simple_feature> POLYGON((13.304083358 41.34..., PO...
 
 ``` r
-plot(res$docs$geom_shape)
+plot(res$docs$geo_shape)
 ```
 
 ![](README_files/figure-markdown_github/example-1.png)
@@ -67,7 +67,7 @@ library(ggplot2)
 
 x %>%
       ggplot() +
-      geom_sf(aes(size = area_ha, geometry = geom_shape)) +
+      geom_sf(aes(size = area_ha, geometry = geo_shape)) +
       ggtitle("Fire") +
       theme(legend.position="bottom") 
 ```

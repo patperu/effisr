@@ -23,10 +23,10 @@ This is a basic example which shows you how to solve a common problem:
 library(effisr)
 library(sf)
 
-res <- ef_current(country = "IT", limit = 250)
+res <- ef_current(country = "IT", limit = 500)
 dplyr::glimpse(res$docs)
 
-plot(res$docs$geom_shape)
+plot(res$docs$geo_shape)
 
 x <- tibble::as_tibble(res$docs) %>%
      sf::st_as_sf(coords = c("lon", "lat")) %>% 
@@ -40,7 +40,7 @@ library(ggplot2)
 
 x %>%
       ggplot() +
-      geom_sf(aes(size = area_ha, geometry = geom_shape)) +
+      geom_sf(aes(size = area_ha, geometry = geo_shape)) +
       ggtitle("Fire") +
       theme(legend.position="bottom") 
 

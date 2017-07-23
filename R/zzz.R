@@ -19,13 +19,7 @@ parse_facet  <- function(x) {
   colnames(coords) <- c("lon", "lat")
   z <- readr::type_convert(cbind(z, coords), col_types = readr::cols())
 
-  k <- lapply(x$results$shape$coordinates,
-              function(m) {
-              v <- m[1,,]
-              sf::st_polygon(list(v))
-              })
-
-  z$geom_shape <- sf::st_sfc(k)
+  z$geo_shape <- sf::st_sfc( geo_transform(x$results$shape) )
 
   geo <- list(bbox = z$bbox, shape = z$shape)
 
@@ -48,4 +42,24 @@ get_coords <- function(x) {
                          stringsAsFactors = FALSE)
     colnames(coords) <- c("lon", "lat")
     coords
+}
+
+
+geo_transform <- function(x) {
+
+  v <- list()
+
+  geo_type  <- x$type
+  geo_coord <- x$coordinates
+
+  for(i in seq_along(geo_type)){
+    if(geo_type[i] == "Polygon")
+      v[[i]] <- sf::st_polygon(list(geo_coord[[i]][1,,]))
+    else {
+      v[[i]] <- sf::st_multipolygon(list(geo_coord[[i]][[1]]))
+    }
+
+  }
+
+  v
 }
