@@ -5,26 +5,30 @@
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
 ef_trend(country = NULL, province = NULL, limit = NULL, firedate = NULL,
-  area_ha = NULL, ba_class = NULL, decimate = NULL, page = NULL, ...)
+  area_ha = NULL, ba_class = NULL, ordering = NULL, decimate = NULL,
+  page = NULL, ...)
 }
 \arguments{
 \item{country}{(character) ISO country code}
 
 \item{province}{(character) Province name}
 
-\item{limit}{(integer) record limit}
+\item{limit}{(integer) Record limit}
 
 \item{firedate}{(character) YYYY-MM-DD}
 
-\item{area_ha}{(integer) size}
+\item{area_ha}{(integer) Size of the fire}
 
-\item{ba_class}{(character) one of 'ALL', '30DAYS' or '07DAYS'}
+\item{ba_class}{(character) One of 'ALL', '30DAYS' or '07DAYS'}
+
+\item{ordering}{(character) One or more field names. Specifies the sort order.
+The names can be optionally prefixed by “-” to indicate descending sort.}
 
 \item{decimate}{(integer) pick one date every x}
 
 \item{page}{(integer) Page number}
 
-\item{...}{Curl options passed on to \code{\link[httr]{GET}}}
+\item{...}{Further args passed on to \code{\link[httr]{GET}}}
 }
 \description{
 Search the European Forest Fire Information System 'EFFIS'

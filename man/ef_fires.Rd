@@ -5,12 +5,12 @@
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
 ef_fires(country_iso2 = NULL, limit = NULL, updated = NULL,
-  detected = NULL, fireId = NULL, page = NULL, ...)
+  detected = NULL, fireId = NULL, ordering = NULL, page = NULL, ...)
 }
 \arguments{
 \item{country_iso2}{(character) ISO2 country code}
 
-\item{limit}{(integer) record limit}
+\item{limit}{(integer) Record limit}
 
 \item{updated}{(character) date time}
 
@@ -18,9 +18,12 @@ ef_fires(country_iso2 = NULL, limit = NULL, updated = NULL,
 
 \item{fireId}{(character) Fire ID}
 
+\item{ordering}{(character) One or more field names. Specifies the sort order.
+The names can be optionally prefixed by “-” to indicate descending sort.}
+
 \item{page}{(integer) Page number}
 
-\item{...}{Curl options passed on to \code{\link[httr]{GET}}}
+\item{...}{Further args passed on to \code{\link[httr]{GET}}}
 }
 \description{
 Search the European Forest Fire Information System 'EFFIS'
