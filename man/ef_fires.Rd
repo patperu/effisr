@@ -8,7 +8,7 @@ ef_fires(country_iso2 = NULL, limit = NULL, updated = NULL,
   detected = NULL, fireId = NULL, ordering = NULL, page = NULL, ...)
 }
 \arguments{
-\item{country_iso2}{(character) ISO2 country code}
+\item{country_iso2}{(character) One or more country names as ISO2 code}
 
 \item{limit}{(integer) Record limit}
 

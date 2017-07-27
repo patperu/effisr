@@ -14,16 +14,14 @@ editor_options:
 
 # effisr
 
-## Example
+## Current
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
+```{r}
 
 library(effisr)
 library(sf)
 
-res <- ef_current(country = "IT", limit = 50, ordering = "-firedate")
+res <- ef_current(country = "IT", limit = 250, ordering = "-firedate")
 dplyr::glimpse(res$docs)
 
 plot(res$docs$geo_shape)
@@ -46,10 +44,11 @@ gg
 
 ```
 
+## Trend
+
 ```{r}
 
-x <- ef_trend(country = "IT", decimate = 7)
-
+x <- ef_trend(country = c("IT", "FR", "ES"), decimate = 7)
 dplyr::glimpse(x)
 
 gg <- ggplot(x, aes(day, current_ba, group = country, color = country)) + geom_line()
@@ -63,11 +62,11 @@ gg
 
 ```
 
-# Fires
+## Fires
 
 ```{r}
 
-x <- ef_fires(country = "IT", limit = 100)
+x <- ef_fires(country_iso2 =  c("FR", "ES"), limit = 10)
 dplyr::glimpse(x)
 
 ```

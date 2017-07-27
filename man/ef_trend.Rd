@@ -9,7 +9,7 @@ ef_trend(country = NULL, province = NULL, limit = NULL, firedate = NULL,
   page = NULL, ...)
 }
 \arguments{
-\item{country}{(character) ISO country code}
+\item{country}{(character) One or more country names as ISO2 code}
 
 \item{province}{(character) Province name}
 

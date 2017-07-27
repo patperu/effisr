@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-#' @param country (character) ISO country code
+#' @param country (character) One or more country names as ISO2 code
 #' @param province (character) Province name
 #' @param limit (integer) Record limit
 #' @param firedate (character) YYYY-MM-DD
@@ -21,25 +21,32 @@ ef_trend <- function(country = NULL, province = NULL,
                        decimate	= NULL,
                        page = NULL, ...)
 {
-  args <- cacomp(list(country = country, province = province,
-                      limit = limit, firedate = firedate,
-                      area_ha = area_ha, ba_class = ba_class,
-                      decimate = decimate,
-                      ordering = ordering,
-                      fmt = "json"))
-  res <- ca_GET(paste0(cabase(), 'burntareas/trend/?'), args, ...)
 
-  data <- purrr::map_df(res$trend, function(x) jsonlite:::null_to_na(x))
+  tmp <- lapply(country, function(x) {
 
-  res <- data.frame(country,
-                    day = names(res$trend),
-                    year_first = res$dates$first,
-                    year_last  = res$dates$last,
-                    data,
-                    stringsAsFactors = FALSE)
+        args <- cacomp(list(country = x, province = province,
+                            limit = limit, firedate = firedate,
+                            area_ha = area_ha, ba_class = ba_class,
+                            decimate = decimate,
+                            ordering = ordering,
+                            fmt = "json"))
+        res <- ca_GET(paste0(cabase(), 'burntareas/trend/?'), args, ...)
 
-  res <- readr::type_convert(res, col_types = readr::cols())
+        data <- purrr::map_df(res$trend, function(x) jsonlite:::null_to_na(x))
 
-  res
+        res <- data.frame(country = x,
+                          day = names(res$trend),
+                          year_first = res$dates$first,
+                          year_last  = res$dates$last,
+                          data,
+                          stringsAsFactors = FALSE)
+
+        res <- readr::type_convert(res, col_types = readr::cols())
+
+        res
+  })
+
+  out <- do.call("rbind", tmp)
+  out
 
   }
