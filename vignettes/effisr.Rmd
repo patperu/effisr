@@ -1,0 +1,83 @@
+---
+title: "effisr"
+author: "Patrick Hausmann, Andrea Zeddar"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+The European Forest Fire Information System (EFFIS) project supports the services in charge of the protection of forests against fires in the EU countries and provides the European Commission services and the European Parliament with updated and reliable information on wildland fires in Europe.
+
+*[add a very short description of EFFIS data sources and data collection methods]*
+
+This vignette aims at explaining how you can get data from EFFIS API through the effisr package.
+
+
+# Installation
+The package is still a development version and can be installed with the devtools package using the following command:
+
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+devtools::install_github('patperu/effisr')
+```
+
+and then loaded in the usual way:
+
+```{r}
+library('effisr')
+```
+
+# Usage
+
+This vignette also uses:
+
+```{r}
+require('ggplot2')
+require('sf')
+```
+ *[add dplyr?]*
+ *[add required package version?]*
+
+The following functions are implemented:
+
+* ef_current()
+* ef_trend()
+* ef_fires()
+
+# Current
+
+```{r}
+res <- ef_current(country = "IT", limit = 250, ordering = "-firedate")
+dplyr::glimpse(res$docs)
+```
+
+
+```{r}
+plot(res$docs$geo_shape)
+```
+
+```{r}
+library(ggplot2)
+
+x <- res$docs
+
+gg <- ggplot(x) +
+      geom_sf(aes(color = area_ha,
+                  size = area_ha, 
+                  geometry = geo_shape)) +
+      ggtitle("Fire") +
+      theme(legend.position="bottom") 
+gg
+```
+
+
+# Trend
+
+```{r}
+x <- ef_trend(country = c("IT", "FR", "ES"), decimate = 7)
+dplyr::glimpse(x)
+```
+
