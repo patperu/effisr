@@ -77,7 +77,7 @@ gg
 # Trend
 
 ```{r}
-x <- ef_trend(country = c("IT", "FR", "ES"), decimate = 7)
+x <- ef_trend(country = c("IT", "FR", "ES", 'GR'), decimate = 7)
 dplyr::glimpse(x)
 ```
 
