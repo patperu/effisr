@@ -1,6 +1,6 @@
 ---
 title: "effisr"
-author: "Patrick Hausmann, Andrea Zeddar"
+author: "Patrick Hausmann, Andrea Zedda"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
