@@ -81,3 +81,14 @@ x <- ef_trend(country = c("IT", "FR", "ES"), decimate = 7)
 dplyr::glimpse(x)
 ```
 
+```{r}
+gg <- ggplot(x, aes(day, current_ba, group = country, color = country)) + geom_line()
+gg <- gg + scale_x_date(expand=c(0,1), limits=range(x$day))
+gg <- gg + labs(x=NULL,
+                title="Burnt Areas 2017",
+                subtitle="",
+                caption="Source: EFFIS")
+gg <- gg + theme_bw()
+gg
+```
+
