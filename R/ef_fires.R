@@ -47,7 +47,7 @@ ef_fires <- function(country_iso2 = NULL,
         out
   })
 
-  out <- do.call("rbind", tmp)
-  out
+  #out <- do.call("rbind", tmp)
+  #out
 
   }
