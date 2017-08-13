@@ -2,6 +2,7 @@
 
 export(ef_current)
 export(ef_fires)
+export(ef_hcu)
 export(ef_trend)
 importFrom(purrr,map_df)
 importFrom(readr,cols)
