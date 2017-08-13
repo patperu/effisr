@@ -4,7 +4,7 @@ author: "Patrick Hausmann, Andrea Zeddar"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{effis vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ This vignette aims at explaining how you can get data from EFFIS API through the
 # Installation
 The package is sitll in development version and can be installed with the devtools package using the following command:
 
-```{r, message=FALSE, warning=FALSE, include=FALSE}
+```{r, eval = FALSE, message=FALSE, warning=FALSE}
 devtools::install_github('patperu/effisr')
 ```
 
@@ -46,11 +46,5 @@ The following functions are implemented:
 * ef_current()
 * ef_trend()
 * ef_fires()
-
-
-
-
-
-
-
+* ef_hcu()
 
