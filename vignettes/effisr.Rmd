@@ -14,7 +14,7 @@ The European Forest Fire Information System (EFFIS) project supports the service
 
 *[add a very short description of EFFIS data sources and data collection methods]*
 
-This vignette aims at explaining how you can get data from EFFIS API through the effisr package.
+This vignette aims to explaining how you can get data from EFFIS API through the effisr package.
 
 
 # Installation
