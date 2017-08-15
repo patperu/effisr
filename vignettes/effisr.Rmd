@@ -11,6 +11,7 @@ vignette: >
 
 
 The European Forest Fire Information System (EFFIS) project supports the services in charge of the protection of forests against fires in the EU countries and provides the European Commission services and the European Parliament with updated and reliable information on wildland fires in Europe.
+The API 
 
 *[add a very short description of EFFIS data sources and data collection methods]*
 
@@ -34,11 +35,13 @@ library('effisr')
 
 This vignette also uses:
 
-```{r}
+```{r, message=FALSE, warning=FALSE, include=FALSE}
 require('ggplot2')
 require('sf')
+require('dplyr')
+require('tmap')
+
 ```
- *[add dplyr?]*
  *[add required package version?]*
 
 The following functions are implemented:
@@ -48,3 +51,64 @@ The following functions are implemented:
 * ef_fires()
 * ef_hcu()
 
+
+
+## Current
+
+The **ef_current()** function gives the data about the current situation of fires across Europe.
+
+```{r}
+res_eu <- ef_current(limit = 250, ordering = "-firedate")
+```
+
+It's possible to add attribute in the funcion, for example filtering the country
+```{r}
+res_it<- ef_current(country = 'IT', limit = 250, ordering = "-firedate")
+```
+
+Inspecting the response object you can see its structure
+```{r}
+glimpse(res_eu, max.level = 1)
+```
+
+
+
+There are a data frame named 'docs' and a list that contains geo stuff.
+However ef_current provides to give you the *docs* data frame with a *Well Know Text* column named *geo_shape*.  
+```{r}
+glimpse(res_eu$docs, max.level = 1)
+```
+
+Then res$docs it's simple feature compatible and you can manage it with sf package.
+We can convert the data frame in a sf class object
+
+```{r}
+current_eu<- st_as_sf(res_eu$docs, crs=4326)
+current_it<- st_as_sf(res_it$docs, crs=4326)
+
+class(current_eu)
+```
+
+After that, is very easy to make geospatial analysis and maps.
+In this vignette we will use *tmap* package.
+
+This package provides a collection of intersting spatial data, we can use Europe shapes.
+```{r, fig.align='center', fig.width=6,fig.height=6}
+data(Europe)
+
+tm_shape(Europe)+
+  tm_polygons(col='#222222')+
+  tm_shape(current_eu )+
+  tm_dots(size = "area_ha", col = "area_ha")+
+  tm_layout(legend.text.color = 'white', bg.color = '#999999') 
+```
+
+```{r, fig.align='center', fig.width=6,fig.height=6}
+
+tm_shape(Europe, bbox = 'Italy')+
+  tm_polygons(col='#222222')+
+  tm_shape(current_it )+
+  tm_dots(size = "area_ha", col = "area_ha")+
+  tm_layout(legend.text.color = 'white', legend.position = c("right","top"),
+            bg.color = '#999999') 
+```
