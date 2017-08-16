@@ -1,6 +1,6 @@
 ---
 title: "effisr"
-author: "Patrick Hausmann, Andrea Zeddar"
+author: "Patrick Hausmann, Andrea Zedda"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -19,7 +19,7 @@ This vignette aims to explaining how you can get data from EFFIS API through the
 
 
 # Installation
-The package is sitll in development version and can be installed with the devtools package using the following command:
+The package is stull in development version and can be installed with the devtools package using the following command:
 
 ```{r, eval = FALSE, message=FALSE, warning=FALSE}
 devtools::install_github('patperu/effisr')
@@ -62,53 +62,78 @@ res_eu <- ef_current(limit = 250, ordering = "-firedate")
 ```
 
 It's possible to add attribute in the funcion, for example filtering the country
+
 ```{r}
-res_it<- ef_current(country = 'IT', limit = 250, ordering = "-firedate")
+res_it <- ef_current(country = 'IT', limit = 250, ordering = "-firedate")
 ```
 
 Inspecting the response object you can see its structure
+
 ```{r}
 glimpse(res_eu, max.level = 1)
 ```
 
 
 
-There are a data frame named 'docs' and a list that contains geo stuff.
-However ef_current provides to give you the *docs* data frame with a *Well Know Text* column named *geo_shape*.  
+There are a data frame named "docs"" and a list that contains geo stuff.
+However ef_current provides to give you the *docs* data frame with a *Well Know Text* column named *geo_shape* that contains the polygons of burnt areas.
+
 ```{r}
 glimpse(res_eu$docs, max.level = 1)
 ```
 
-Then res$docs it's simple feature compatible and you can manage it with sf package.
+Then res$docs it's simple feature compatible and you can manage it with **sf** package.
 We can convert the data frame in a sf class object
 
 ```{r}
-current_eu<- st_as_sf(res_eu$docs, crs=4326)
-current_it<- st_as_sf(res_it$docs, crs=4326)
+current_eu <- st_as_sf(res_eu$docs, crs=4326)
+current_it <- st_as_sf(res_it$docs, crs=4326)
 
 class(current_eu)
 ```
 
 After that, is very easy to make geospatial analysis and maps.
 In this vignette we will use *tmap* package.
+This package provides a flexible, layer-based, and easy to use approach to create thematic maps, such as choropleths and bubble maps. <br>
+It also offers a collection of intersting spatial data, so we can use Europe shapes and plot fires.
 
-This package provides a collection of intersting spatial data, we can use Europe shapes.
 ```{r, fig.align='center', fig.width=6,fig.height=6}
 data(Europe)
 
-tm_shape(Europe)+
-  tm_polygons(col='#222222')+
-  tm_shape(current_eu )+
-  tm_dots(size = "area_ha", col = "area_ha")+
-  tm_layout(legend.text.color = 'white', bg.color = '#999999') 
+tm_shape(Europe ) +
+  tm_polygons(col="#222222") +
+tm_shape(current_eu ) +
+  tm_dots(size = "area_ha", col = "area_ha",title= "Burnt area (ha)") +
+  tm_layout(legend.text.color = "white", bg.color = "#999999")
 ```
+
+Even the geometry of our spatial data (burnt areas) are polygons, we choose to plot fires as bubbles to show better their distribution in a large area as Europe.
+<br>
+
+We can focus the zones with many fires, filtering smaller areas, like countries or region, there is an example of fires in Italy according to data from our response object *current_it*.
 
 ```{r, fig.align='center', fig.width=6,fig.height=6}
 
-tm_shape(Europe, bbox = 'Italy')+
-  tm_polygons(col='#222222')+
-  tm_shape(current_it )+
-  tm_dots(size = "area_ha", col = "area_ha")+
-  tm_layout(legend.text.color = 'white', legend.position = c("right","top"),
-            bg.color = '#999999') 
+tm_shape(Europe, bbox = 'Italy') +
+  tm_polygons(col='#222222') +
+tm_shape(current_it ) +
+  tm_dots(size = "area_ha", col = "area_ha", title= "Burnt area (ha)") +
+  tm_layout(legend.text.color = "white",
+            legend.position = c("right","top"),
+            bg.color = "#999999") 
 ```
+
+With tmap is also possible to create interactive maps (based on leaflet), this feature is very useful when we want to observe small areas and show the extension of burnt areas as polygons.
+
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.width=6,fig.height=6}
+tmap_mode("view")
+tm_shape(filter(current_it, province=="Palermo")) +
+  tm_polygons( col = "area_ha", 
+    popup.vars = TRUE,
+    title="Burnt area (ha)") +
+tm_view(alpha = 0.7,
+  basemaps ="CartoDB.DarkMatter",
+  basemaps.alpha =1)
+
+```
+
