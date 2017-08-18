@@ -53,7 +53,7 @@ The following functions are implemented:
 
 
 
-## Current
+## Get current data
 
 The **ef_current()** function gives the data about the current situation of fires across Europe.
 
@@ -136,4 +136,11 @@ tm_view(alpha = 0.7,
   basemaps.alpha =1)
 
 ```
+
+## Fires
+
+```{r}
+x <- ef_fires(country_iso2 =  c("IT"), limit = 250)
+```
+
 
