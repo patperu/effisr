@@ -20,5 +20,8 @@ Imports:
         readr
 RoxygenNote: 6.0.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr,
+    ggplot2,
+    tmap
 VignetteBuilder: knitr
