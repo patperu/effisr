@@ -7,7 +7,11 @@ vignette: >
   %\VignetteIndexEntry{effis vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  q
 ---
+```{r}
+
+```
 
 
 The European Forest Fire Information System (EFFIS) project supports the services in charge of the protection of forests against fires in the EU countries and provides the European Commission services and the European Parliament with updated and reliable information on wildland fires in Europe.
@@ -140,7 +144,22 @@ tm_view(alpha = 0.7,
 ## Fires
 
 ```{r}
-x <- ef_fires(country_iso2 =  c("IT"), limit = 250)
+trend_eu <- ef_trend(country = c('IT', 'ES', 'PT'))
 ```
 
+```{r, include=FALSE}
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
+library(scales) #i must find another solution, too much packages
+```
+
+
+```{r}
+      ggplot(trend_eu, aes(day, current_ba, group = country, color = country)) + 
+      geom_line()+
+      scale_x_date(expand=c(0,1), limits=range(trend_eu$day), date_labels = '%b')+
+       scale_y_continuous(labels= comma)+
+      labs(x=NULL,title="Burnt Areas 2017",subtitle="",caption="Source: EFFIS")+
+      theme_bw()
+
+```
 
