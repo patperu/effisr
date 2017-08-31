@@ -141,7 +141,7 @@ tm_view(alpha = 0.7,
 
 ```
 
-## Fires
+## Trends
 
 ```{r}
 trend_eu <- ef_trend(country = c('IT', 'ES', 'PT'))
@@ -154,12 +154,34 @@ library(scales) #i must find another solution, too much packages
 
 
 ```{r}
-      ggplot(trend_eu, aes(day, current_ba, group = country, color = country)) + 
-      geom_line()+
-      scale_x_date(expand=c(0,1), limits=range(trend_eu$day), date_labels = '%b')+
+      ggplot(filter(trend_eu, !is.na(current_ba)), aes(day, current_ba, group = country, color = country)) + 
+      geom_step() +
+      scale_x_date(expand=c(0,1), date_labels = '%b', date_breaks = 'month') +
        scale_y_continuous(labels= comma)+
-      labs(x=NULL,title="Burnt Areas 2017",subtitle="",caption="Source: EFFIS")+
+      labs(x=NULL,title="Burnt Areas 2017",subtitle="",caption="Source: EFFIS") +
       theme_bw()
 
 ```
+
+```{r}
+IT_cum <- ef_hcu(2011:2016, "IT")
+```
+
+
+```{r}
+ggplot(IT_cum, aes(date, trend_ba, group = year, colour = trend_ba)) +
+geom_step() +
+scale_x_date(expand=c(0,25), date_labels = '%b', date_breaks = '2 months') +
+  scale_color_gradient(low = 'blue',high = 'red')+
+  geom_text(data=IT_cum[IT_cum$date=='1976-12-30',],aes(label=year), 
+            hjust = -0.1, vjust = 0.4, size=3)+
+labs(x=NULL,
+    title="Cumulative Burnt Areas by year (Italy)",
+    color = "Year",
+    subtitle="",
+    caption="Source: EFFIS") +
+  guides(colour=F)+
+  theme_minimal()
+```
+
 
