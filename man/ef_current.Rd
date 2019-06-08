@@ -5,8 +5,8 @@
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
 ef_current(country = NULL, province = NULL, limit = NULL,
-  firedate = NULL, area_ha = NULL, ba_class = NULL, ordering = NULL,
-  page = NULL, ...)
+  firedate = NULL, area_ha = NULL, ba_class = NULL,
+  ordering = NULL, page = NULL, ...)
 }
 \arguments{
 \item{country}{(character) ISO country code}

@@ -15,38 +15,41 @@
 #' @template otherargs
 
 ef_trend <- function(country = NULL, province = NULL,
-                       limit = NULL, firedate = NULL,
-                       area_ha = NULL, ba_class = NULL,
-                       ordering = NULL,
-                       decimate	= NULL,
-                       page = NULL, ...)
-{
+                     limit = NULL, firedate = NULL,
+                     area_ha = NULL, ba_class = NULL,
+                     ordering = NULL,
+                     decimate	= NULL,
+                     page = NULL, ...) {
 
-  tmp <- lapply(country, function(x) {
 
-        args <- cacomp(list(country = x, province = province,
-                            limit = limit, firedate = firedate,
-                            area_ha = area_ha, ba_class = ba_class,
-                            decimate = decimate,
-                            ordering = ordering,
-                            fmt = "json"))
-        res <- ca_GET(paste0(cabase(), 'burntareas/trend/?'), args, ...)
+  effisr_client <- set_effisr_client()
 
-        data <- purrr::map_df(res$trend, function(x) jsonlite:::null_to_na(x))
+  resp <- effisr_client$get(
+    path = "rest/2/burntareas/trend",
+    query = cacomp(list(country = country,
+                        province = province,
+                        limit = limit,
+                        firedate = firedate,
+                        area_ha = area_ha,
+                        ba_class = ba_class,
+                        ordering = ordering,
+                        fmt = "json"))
+  )
 
-        res <- data.frame(country = x,
-                          day = names(res$trend),
-                          year_first = res$dates$first,
-                          year_last  = res$dates$last,
-                          data,
-                          stringsAsFactors = FALSE)
 
-        res <- readr::type_convert(res, col_types = readr::cols())
+  res <- jsonlite::fromJSON(rawToChar(resp$content))
 
-        res
-  })
+  data <- purrr::map_df(res$trend, function(x) as.data.frame(Filter(Negate(is.null), x)))
 
-  out <- do.call("rbind", tmp)
-  out
+  res <- data.frame(country = country,
+                    day = names(res$trend),
+                    year_first = res$dates$first,
+                    year_last  = res$dates$last,
+                    data,
+                    stringsAsFactors = FALSE)
 
-  }
+  res <- readr::type_convert(res, col_types = readr::cols())
+
+  res
+
+}

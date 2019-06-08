@@ -17,14 +17,51 @@ ef_current <- function(country = NULL, province = NULL,
                        limit = NULL, firedate = NULL,
                        area_ha = NULL, ba_class = NULL,
                        ordering = NULL,
-                       page = NULL, ...)
-{
-  args <- cacomp(list(country = country, province = province,
-                      limit = limit, firedate = firedate,
-                      area_ha = area_ha, ba_class = ba_class,
-                      ordering = ordering,
-                      fmt = "json"))
-  res <- ca_GET(paste0(cabase(), 'burntareas/current/?'), args, ...)
-  list(docs = parse_facet(res)$result,
-       geo =  parse_facet(res)$geo)
+                       page = NULL, ...) {
+
+
+  effisr_client <- set_effisr_client()
+
+  resp <- effisr_client$get(
+    path = "rest/2/burntareas/current",
+    query = cacomp(list(country = country,
+                        province = province,
+                        limit = limit,
+                        firedate = firedate,
+                        area_ha = area_ha,
+                        ba_class = ba_class,
+                        ordering = ordering,
+                        fmt = "json"))
+  )
+
+  out <- jsonlite::fromJSON(rawToChar(resp$content))
+
+  var_names <- c("objectid",
+                 "id",
+                 "countryful",
+                 "province",
+                 "commune",
+                 "firedate",
+                 "area_ha",
+                 "broadlea",
+                 "conifer",
+                 "mixed",
+                 "scleroph",
+                 "transit",
+                 "othernatlc",
+                 "agriareas",
+                 "artifsurf",
+                 "otherlc",
+                 "percna2k",
+                 "lastupdate",
+                 "ba_class",
+                 "mic",
+                 "se_anno_cad_data",
+                 "critech",
+                 "country")
+
+  data <- readr::type_convert(out$results[var_names], col_types = cols())
+
+  make_sf_current(out, data)
+
 }

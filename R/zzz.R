@@ -1,4 +1,4 @@
-cabase <- function() "http://effis.jrc.ec.europa.eu/rest/2/"
+cabase <- function() "http://effis.jrc.ec.europa.eu"
 
 ca_GET <- function(url, args, ...) {
 
@@ -10,38 +10,15 @@ ca_GET <- function(url, args, ...) {
 
 cacomp <- function (l) Filter(Negate(is.null), l)
 
-parse_facet  <- function(x) {
+set_effisr_client <- function() {
 
-  z <- x$results
-  coords <- data.frame(t(sapply(z$centroid$coordinates, "[")), stringsAsFactors = FALSE)
-  colnames(coords) <- c("lon", "lat")
-  z <- readr::type_convert(cbind(z, coords), col_types = readr::cols())
-
-  z$geo_shape <- sf::st_sfc( geo_transform(x$results$shape) )
-
-  geo <- list(bbox = z$bbox, shape = z$shape)
-
-  z$centroid <- NULL
-  z$bbox     <- NULL
-  z$shape    <- NULL
-
-  list(result=z, geo=geo)
+  crul::HttpClient$new(
+    url = "effis.jrc.ec.europa.eu",
+    opts = list(timeout_ms = 30000),
+    headers = list(`User-Agent` = "effisr R package; http://github.com/patperu/effisr")
+  )
 
 }
-
-get_coords <- function(x) {
-
-    x <- x$centroid
-
-    # set 'null' to NA
-    ix <- which(is.na(x$type))
-    x$coordinates[ix] <- NA
-    coords <- data.frame(do.call("rbind", x$coordinates),
-                         stringsAsFactors = FALSE)
-    colnames(coords) <- c("lon", "lat")
-    coords
-}
-
 
 geo_transform <- function(x) {
 
@@ -61,3 +38,19 @@ geo_transform <- function(x) {
 
   v
 }
+
+make_sf_fires <- function(res, data) {
+
+  poly_obj <- geo_transform(res$results$shape)
+
+  sf::st_sf(cbind(data, sf::st_sfc(poly_obj, crs = 4326)))
+
+}
+
+make_sf_current <- function(res, data) {
+
+  poly_obj <- purrr::map(res$results$shape$coordinates, ~{st_polygon(list(matrix(.x, ncol = 2)))})
+
+  sf::st_sf(cbind(data, sf::st_sfc(poly_obj, crs = 4326)))
+}
+

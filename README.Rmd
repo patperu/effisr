@@ -1,122 +1,112 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
-editor_options:
-  chunk_output_type: console
+title: "effisr"
+output: github_document
 ---
 
-
 ```{r echo=FALSE}
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  warning = FALSE,
-  message = TRUE
-)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.retina = 2, collapse = TRUE)
 ```
 
 [![Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept.](http://www.repostatus.org/badges/latest/concept.svg)](http://www.repostatus.org/#concept)
 [![Travis-CI Build Status](https://travis-ci.org/patperu/effisr.svg?branch=master)](https://travis-ci.org/patperu/effisr)
 
+### Libraries
 
-# effisr
-
-## Current
-
-```{r}
+```{r libs}
 
 library(effisr)
+library(dplyr)
 library(sf)
-
-res <- ef_current(country = "IT", limit = 250, ordering = "-firedate")
-res$docs <- sf::st_as_sf(res$docs, crs = 4326)
-
-dplyr::glimpse(res$docs)
-
-plot(res$docs$geo_shape)
-
-```
-
-```{r}
-
 library(ggplot2)
-
-x <- res$docs
-
-gg <- ggplot(x) +
-      geom_sf(aes(color = area_ha,
-                  size = area_ha, 
-                  geometry = geo_shape)) +
-      ggtitle("Fire") +
-      theme(legend.position="bottom") 
-gg
-
-```
-
-## Leaflet
-
-```{r}
-
+library(hrbrthemes) # not 100% necessary
 library(leaflet)
-library(leaflet.extras)
 
-leaflet(dplyr::filter(x, province == "Palermo")) %>%
+```
+
+### Current
+
+```{r}
+
+x <- ef_current(country = "IT", limit = 250, ordering = "-firedate")
+glimpse(x)
+
+leaflet(x) %>%
    addTiles() %>%
-   addPolygons(label = ~area_ha, popup = ~area_ha)
+   addPolygons(label = ~area_ha)
 
 ```
 
-## Trend
+### Trend
 
 ```{r}
 
-x <- ef_trend(country = c("IT", "FR", "ES"), decimate = 7)
-dplyr::glimpse(x)
+x <- purrr::map_df(list("IT", "FR", "ES"), ~{ef_trend(country = .x, decimate = 7)})
+glimpse(x)
 
-gg <- ggplot(x, aes(day, current_ba, group = country, color = country)) + geom_line()
-gg <- gg + scale_x_date(expand=c(0,1), limits=range(x$day))
-gg <- gg + labs(x=NULL,
-                title="Burnt Areas 2017",
-                subtitle="",
-                caption="Source: EFFIS")
-gg <- gg + theme_bw()
-gg
-
+ggplot(x, aes(day, current_ba, group = country, color = country)) + 
+      geom_step() + 
+      scale_x_date(expand=c(0,1), date_labels = '%b', date_breaks = 'month') +
+      labs(x=NULL,
+           title="Burnt Areas",
+           subtitle="",
+           caption="Source: EFFIS") + 
+      theme_ipsum()
 ```
 
-## Fires
+### Fires
 
 ```{r}
 
-x <- ef_fires(country_iso2 =  c("IT", "ES"), limit = 10)
-dplyr::glimpse(x)
+x <- ef_fires(country_iso2 = "FR")
+glimpse(x)
+
+leaflet(x) %>%
+   addTiles() %>%
+   addPolygons(label = ~area, col = "red", weight = 4)
 
 ```
 
-## Cumulative
+### Cumulative
 
 ```{r cumulative}
 
-IT_cum <- ef_hcu(2006:2016, "IT")
-gg <- ggplot(IT_cum, aes(date, trend_ba, group = year, colour = factor(year))) + geom_line()
-gg <- gg + labs(x=NULL,
-                title="Cumulative Burnt Areas by year (Italy)",
-                color = "Year",
-                subtitle="",
-                caption="Source: EFFIS")
-gg <- gg + theme_bw()
-gg
+IT_cum <- ef_hcu("IT", 2006:2018)
+glimpse(IT_cum)
 
-FR_cum <- ef_hcu(2006:2016, "FR")
-gg <- ggplot(FR_cum, aes(date, trend_nf)) + geom_line(aes(group = year, colour = factor(year)))
-gg <- gg + labs(x=NULL,
-                title="Cumulative Number of fires by year (France)",
-                color = "Year",
-                subtitle="",
-                caption="Source: EFFIS")
-gg <- gg + theme_bw()
-gg
+ggplot(IT_cum, aes(date, trend_ba, group = year, colour = trend_ba)) +
+        geom_step() +
+        scale_x_date(expand=c(0, 25), date_labels = '%b', date_breaks = '2 months') +
+        scale_color_gradient(low = 'blue', high = 'red') +
+        geom_text(data = IT_cum[IT_cum$date=='1976-12-30',], 
+                  aes(label=year), 
+                  hjust = -0.1, 
+                  vjust = 0.4, size = 3) +
+        labs(x = NULL,
+             title = "Cumulative Burnt Areas (_ba) by year (Italy)",
+             color = "Year",
+             subtitle = "",
+             caption = "Source: EFFIS") +
+        guides(colour = FALSE) +
+        theme_ipsum()
+
+ES_cum <- ef_hcu("ES", 2006:2018)
+glimpse(ES_cum)
+
+ggplot(ES_cum, aes(date, trend_nf, group = year, colour = trend_nf)) + 
+        geom_step() +
+        scale_x_date(expand=c(0, 25), date_labels = '%b', date_breaks = '2 months') +
+        scale_color_gradient(low = 'blue', high = 'red') +
+        geom_text(data = ES_cum[ES_cum$date=='1976-12-30',], 
+                  aes(label=year), 
+                  hjust = -0.1, 
+                  vjust = 0.4, size = 3) +
+        labs(x = NULL,
+             title = "Cumulative Number of fires (_nf) by year (Spain)",
+             color = "Year",
+             subtitle = "",
+             caption = "Source: EFFIS") +
+        guides(colour = FALSE) +
+        theme_ipsum()
 ```
 
 Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.

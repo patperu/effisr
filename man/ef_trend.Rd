@@ -4,9 +4,9 @@
 \alias{ef_trend}
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
-ef_trend(country = NULL, province = NULL, limit = NULL, firedate = NULL,
-  area_ha = NULL, ba_class = NULL, ordering = NULL, decimate = NULL,
-  page = NULL, ...)
+ef_trend(country = NULL, province = NULL, limit = NULL,
+  firedate = NULL, area_ha = NULL, ba_class = NULL,
+  ordering = NULL, decimate = NULL, page = NULL, ...)
 }
 \arguments{
 \item{country}{(character) One or more country names as ISO2 code}

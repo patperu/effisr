@@ -4,12 +4,12 @@
 \alias{ef_hcu}
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
-ef_hcu(year, country)
+ef_hcu(country, year)
 }
 \arguments{
-\item{year}{(integer) One or more year, must be smaler than the current year}
-
 \item{country}{(country) ISO2 code, only one country}
+
+\item{year}{(integer) One or more year, must be smaler than the current year}
 }
 \description{
 Search the European Forest Fire Information System 'EFFIS'

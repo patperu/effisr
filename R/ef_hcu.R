@@ -2,10 +2,10 @@
 #'
 #'
 #' @export
-#' @param year (integer) One or more year, must be smaler than the current year
 #' @param country (country) ISO2 code, only one country
+#' @param year (integer) One or more year, must be smaler than the current year
 
-ef_hcu <- function(year, country) {
+ef_hcu <- function(country, year) {
 
  data <- purrr::map2(year, country, function(x, y) {
 

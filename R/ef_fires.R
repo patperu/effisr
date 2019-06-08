@@ -14,40 +14,39 @@
 
 ef_fires <- function(country_iso2 = NULL,
                      limit = NULL,
-                     updated = NULL,
-                     detected = NULL,
-                     fireId = NULL,
-                     ordering = NULL,
-                     page = NULL, ...)
-{
+                     updated = NULL, detected = NULL,
+                     fireId = NULL, ordering = NULL,
+                     page = NULL, ...) {
 
-  tmp <- lapply(country_iso2, function(x) {
 
-        args <- cacomp(list(country_iso2 = x,
-                            limit = limit,
-                            updated = updated,
-                            detected = detected,
-                            fireId = fireId,
-                            ordering = ordering,
-                            fmt = "json"))
+  effisr_client <- set_effisr_client()
 
-        res <- ca_GET(paste0(cabase(), 'fires/?'), args, ...)
+  resp <- effisr_client$get(
+    path = "rest/2/fires",
+    query = cacomp(list(country_iso2 = country_iso2,
+                        limit = limit,
+                        updated = updated,
+                        detected = detected,
+                        fireId = fireId,
+                        ordering = ordering,
+                        fmt = "json"))
+  )
 
-        res$results$lon <- get_coords(res$results)[["lon"]]
-        res$results$lat <- get_coords(res$results)[["lat"]]
+  out <- jsonlite::fromJSON(rawToChar(resp$content))
 
-        res$results$centroid <- NULL
-        res$results$bbox <- NULL
-        res$results$metadata <- NULL
+  var_names <- c("fireId",
+                 "metadata",
+                 "detected",
+                 "updated",
+                 "area",
+                 "country",
+                 "adminSublevel1",
+                 "adminSublevel2",
+                 "adminSublevel3",
+                 "adminSublevel4")
 
-        res$results$country_iso2 <- x
+  data <- readr::type_convert(out$results[var_names], col_types = cols())
 
-        out <- readr::type_convert(res$results, col_types = readr::cols())
+  make_sf_fires(out, data)
 
-        out
-  })
-
-  #out <- do.call("rbind", tmp)
-  #out
-
-  }
+}

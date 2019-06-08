@@ -5,7 +5,8 @@
 \title{Search the European Forest Fire Information System 'EFFIS'}
 \usage{
 ef_fires(country_iso2 = NULL, limit = NULL, updated = NULL,
-  detected = NULL, fireId = NULL, ordering = NULL, page = NULL, ...)
+  detected = NULL, fireId = NULL, ordering = NULL, page = NULL,
+  ...)
 }
 \arguments{
 \item{country_iso2}{(character) One or more country names as ISO2 code}
