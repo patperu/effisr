@@ -20,7 +20,7 @@ ef_fires(country_iso2 = NULL, limit = NULL, updated = NULL,
 \item{fireId}{(character) Fire ID}
 
 \item{ordering}{(character) One or more field names. Specifies the sort order.
-The names can be optionally prefixed by “-” to indicate descending sort.}
+The names can be optionally prefixed by '-' to indicate descending sort.}
 
 \item{page}{(integer) Page number}
 

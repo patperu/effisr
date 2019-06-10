@@ -8,7 +8,7 @@
 #' @param detected (character) date time
 #' @param fireId (character) Fire ID
 #' @param ordering (character) One or more field names. Specifies the sort order.
-#' The names can be optionally prefixed by “-” to indicate descending sort.
+#' The names can be optionally prefixed by '-' to indicate descending sort.
 #' @param page (integer) Page number
 #' @template otherargs
 
@@ -21,18 +21,26 @@ ef_fires <- function(country_iso2 = NULL,
 
   effisr_client <- set_effisr_client()
 
-  resp <- effisr_client$get(
-    path = "rest/2/fires",
-    query = cacomp(list(country_iso2 = country_iso2,
-                        limit = limit,
-                        updated = updated,
-                        detected = detected,
-                        fireId = fireId,
-                        ordering = ordering,
-                        fmt = "json"))
-  )
+  res <- effisr_client$get(
+            path = "rest/2/fires",
+            query = cacomp(list(country_iso2 = country_iso2,
+                                limit = limit,
+                                updated = updated,
+                                detected = detected,
+                                fireId = fireId,
+                                ordering = ordering,
+                                fmt = "json")))
 
-  out <- jsonlite::fromJSON(rawToChar(resp$content))
+  if (res$status_code > 201) {
+    mssg <- jsonlite::fromJSON(res$parse("UTF-8"))$message$message
+    x <- res$status_http()
+    stop(
+      sprintf("HTTP (%s) - %s\n  %s", x$status_code, x$explanation, mssg),
+      call. = FALSE
+    )
+  }
+
+  txt <- jsonlite::fromJSON(res$parse("UTF-8"))
 
   var_names <- c("fireId",
                  "metadata",
@@ -45,8 +53,8 @@ ef_fires <- function(country_iso2 = NULL,
                  "adminSublevel3",
                  "adminSublevel4")
 
-  data <- readr::type_convert(out$results[var_names], col_types = cols())
+  data <- readr::type_convert(txt$results[var_names], col_types = cols())
 
-  make_sf_fires(out, data)
+  make_sf_fires(txt, data)
 
 }

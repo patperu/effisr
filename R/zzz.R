@@ -12,6 +12,18 @@ set_effisr_client <- function() {
 
 }
 
+get_res_status <- function(res) {
+
+  if (res$status_code > 201) {
+    mssg <- jsonlite::fromJSON(res$parse("UTF-8"))$message$message
+    x <- res$status_http()
+    stop(
+      sprintf("HTTP (%s) - %s\n  %s", x$status_code, x$explanation, mssg),
+      call. = FALSE
+    )
+  }
+}
+
 geo_transform <- function(x) {
 
   v <- list()

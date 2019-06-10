@@ -11,10 +11,14 @@
 #'
 #' \itemize{
 #'  \item \code{\link{ef_current}}
-#'  \item \code{\link{ef_trend}} .
-#'  \item \code{\link{ef_fires}} .
+#'  \item \code{\link{ef_trend}}
+#'  \item \code{\link{ef_fires}}
+#'  \item \code{\link{ef_hcu}}
 #' }
 #'
+#'
+#' - URL: <https://github.com/patperu/effisr>
+#' - BugReports: <https://github.com/patperu/effisr/issues>
 #'
 #' @name effisr-package
 #' @aliases effisr

@@ -22,19 +22,27 @@ ef_current <- function(country = NULL, province = NULL,
 
   effisr_client <- set_effisr_client()
 
-  resp <- effisr_client$get(
-    path = "rest/2/burntareas/current",
-    query = cacomp(list(country = country,
-                        province = province,
-                        limit = limit,
-                        firedate = firedate,
-                        area_ha = area_ha,
-                        ba_class = ba_class,
-                        ordering = ordering,
-                        fmt = "json"))
-  )
+  res <- effisr_client$get(
+            path = "rest/2/burntareas/current",
+            query = cacomp(list(country = country,
+                                province = province,
+                                limit = limit,
+                                firedate = firedate,
+                                area_ha = area_ha,
+                                ba_class = ba_class,
+                                ordering = ordering,
+                                fmt = "json")))
 
-  out <- jsonlite::fromJSON(rawToChar(resp$content))
+  if (res$status_code > 201) {
+    mssg <- jsonlite::fromJSON(res$parse("UTF-8"))$message$message
+    x <- res$status_http()
+    stop(
+      sprintf("HTTP (%s) - %s\n  %s", x$status_code, x$explanation, mssg),
+      call. = FALSE
+    )
+  }
+
+  txt <- jsonlite::fromJSON(res$parse("UTF-8"))
 
   var_names <- c("objectid",
                  "id",
@@ -60,8 +68,8 @@ ef_current <- function(country = NULL, province = NULL,
                  "critech",
                  "country")
 
-  data <- readr::type_convert(out$results[var_names], col_types = cols())
+  data <- readr::type_convert(txt$results[var_names], col_types = cols())
 
-  make_sf_current(out, data)
+  make_sf_current(txt, data)
 
 }

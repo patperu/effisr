@@ -18,13 +18,22 @@ ef_hcu <- function(country, year) {
                                       decimate = 7,
                                       fmt = "json")))
 
-   res <- jsonlite::fromJSON(rawToChar(res$content))
+   if (res$status_code > 201) {
+      mssg <- jsonlite::fromJSON(res$parse("UTF-8"))$message$message
+      x <- res$status_http()
+      stop(
+         sprintf("HTTP (%s) - %s\n  %s", x$status_code, x$explanation, mssg),
+         call. = FALSE
+      )
+   }
+
+   txt <- jsonlite::fromJSON(res$parse("UTF-8"))
 
    x <- data.frame(country = country,
-                   year = res$years,
-                   date = res$trend_nf[,1],
-                   trend_nf = res$trend_nf[, 2],
-                   trend_ba = res$trend_ba[, 2],
+                   year = txt$years,
+                   date = txt$trend_nf[,1],
+                   trend_nf = txt$trend_nf[, 2],
+                   trend_ba = txt$trend_ba[, 2],
                    stringsAsFactors = FALSE)
 
    readr::type_convert(x, col_types = readr::cols())
