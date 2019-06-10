@@ -24,32 +24,38 @@ ef_trend <- function(country = NULL, province = NULL,
 
   effisr_client <- set_effisr_client()
 
-  resp <- effisr_client$get(
-    path = "rest/2/burntareas/trend",
-    query = cacomp(list(country = country,
-                        province = province,
-                        limit = limit,
-                        firedate = firedate,
-                        area_ha = area_ha,
-                        ba_class = ba_class,
-                        ordering = ordering,
-                        fmt = "json"))
-  )
+  res <- effisr_client$get(
+            path = "rest/2/burntareas/trend",
+            query = cacomp(list(country = country,
+                                province = province,
+                                limit = limit,
+                                firedate = firedate,
+                                area_ha = area_ha,
+                                ba_class = ba_class,
+                                decimate = decimate,
+                                ordering = ordering,
+                                fmt = "json")))
 
+  if (res$status_code > 201) {
+    mssg <- jsonlite::fromJSON(res$parse("UTF-8"))$message$message
+    x <- res$status_http()
+    stop(
+      sprintf("HTTP (%s) - %s\n  %s", x$status_code, x$explanation, mssg),
+      call. = FALSE
+    )
+  }
 
-  res <- jsonlite::fromJSON(rawToChar(resp$content))
+  txt <- jsonlite::fromJSON(res$parse("UTF-8"))
 
-  data <- purrr::map_df(res$trend, function(x) as.data.frame(Filter(Negate(is.null), x)))
+  data <- purrr::map_df(txt$trend, function(x) as.data.frame(Filter(Negate(is.null), x)))
 
-  res <- data.frame(country = country,
-                    day = names(res$trend),
-                    year_first = res$dates$first,
-                    year_last  = res$dates$last,
-                    data,
-                    stringsAsFactors = FALSE)
+  x <- data.frame(country = country,
+                  day = names(txt$trend),
+                  year_first = txt$dates$first,
+                  year_last  = txt$dates$last,
+                  data,
+                  stringsAsFactors = FALSE)
 
-  res <- readr::type_convert(res, col_types = readr::cols())
-
-  res
+  readr::type_convert(x, col_types = readr::cols())
 
 }
