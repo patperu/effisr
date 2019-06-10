@@ -7,25 +7,27 @@
 
 ef_hcu <- function(country, year) {
 
- data <- purrr::map2(year, country, function(x, y) {
+ data <- purrr::map2(country, year, function(x, y) {
 
-    url <- sprintf("http://effis.jrc.ec.europa.eu/rest/2/burntareas/historical/cumulative/?decimate=7&format=json&yearseason=%s&country=%s", x, y)
+   effisr_client <- set_effisr_client()
 
-    res <- httr::GET(url)
-    res <- httr::content(res, as = "text", encoding = "UTF-8")
+   res <- effisr_client$get(
+                  path = "rest/2/burntareas/historical/cumulative/",
+                  query = cacomp(list(country = x,
+                                      yearseason = y,
+                                      decimate = 7,
+                                      fmt = "json")))
 
-    r <- jsonlite::fromJSON(res)
+   res <- jsonlite::fromJSON(rawToChar(res$content))
 
-    identical(r$trend_nf[,1], r$trend_ba[,1])
+   x <- data.frame(country = country,
+                   year = res$years,
+                   date = res$trend_nf[,1],
+                   trend_nf = res$trend_nf[, 2],
+                   trend_ba = res$trend_ba[, 2],
+                   stringsAsFactors = FALSE)
 
-    x <- data.frame(country = country,
-                    year = r$years,
-                    date = r$trend_nf[,1],
-                    trend_nf = r$trend_nf[,2],
-                    trend_ba = r$trend_ba[,2],
-                    stringsAsFactors = FALSE)
-
-    readr::type_convert(x, col_types = readr::cols())
+   readr::type_convert(x, col_types = readr::cols())
 
   })
 

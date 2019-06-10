@@ -1,13 +1,5 @@
 cabase <- function() "http://effis.jrc.ec.europa.eu"
 
-ca_GET <- function(url, args, ...) {
-
-  res <- httr::GET(url, query=args, ...)
-  httr::stop_for_status(res)
-  text <- httr::content(res, as = "text", encoding = "UTF-8")
-  jsonlite::fromJSON(text)
-}
-
 cacomp <- function (l) Filter(Negate(is.null), l)
 
 set_effisr_client <- function() {
